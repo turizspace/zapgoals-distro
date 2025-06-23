@@ -1,0 +1,51 @@
+.modern-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.loading-theme {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.notif-empty {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.notif-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.notif-feed-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+
+.notif-zapper-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.notif-feed-info {
+  flex: 1;
+}
+
+.notif-amount {
+  color: #666;
+  font-size: 0.9em;
+  margin-top: 4px;
+}

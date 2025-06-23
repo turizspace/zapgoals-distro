@@ -1,0 +1,4 @@
+src/nostr/bunkerProvider.ts
+src/shared/components/QRCode.tsx
+src/shared/components/Nip46ConnectModal.tsx
+src/shared/components/Nip46ConnectModal.css

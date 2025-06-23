@@ -1,0 +1,247 @@
+.profile-viewer {
+  padding: 2rem 0;
+}
+
+.profile-card {
+  background: rgba(255,255,255,0.85);
+  border-radius: 24px;
+  box-shadow: 0 8px 40px #05ce7833, 0 1.5px 0 #c110d1;
+  padding: 2rem;
+  margin: 0 auto;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.profile-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-md);
+  border: 3px solid var(--primary);
+  padding: 2px;
+  transition: transform var(--transition-fast);
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+}
+
+.profile-name {
+  text-align: center;
+}
+
+.profile-name h2 {
+  margin: 0;
+  color: #232946;
+  font-size: 1.8em;
+  font-weight: 800;
+}
+
+.profile-username {
+  color: #b8c1ec;
+  font-size: 1.1em;
+  margin-top: 0.5rem;
+}
+
+.verified-badge {
+  color: var(--primary);
+  margin-right: var(--space-xs);
+}
+
+.profile-about {
+  color: var(--text);
+  margin-bottom: var(--space-sm);
+  text-align: center;
+  font-size: 1.05em;
+}
+
+.profile-lightning {
+  color: var(--primary);
+  font-size: 1em;
+  margin-bottom: var(--space-xs);
+}
+
+.profile-banner {
+  width: 100%;
+  height: 200px;
+  margin-bottom: var(--space-lg);
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+}
+
+.banner-image,
+.banner-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-website {
+  margin: var(--space-sm) 0;
+}
+
+.profile-website a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.profile-website a:hover {
+  color: var(--secondary);
+  text-decoration: underline;
+}
+
+.goals-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.goals-title {
+  color: #232946;
+  margin: 3rem 0 2rem;
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+  text-shadow: 0 2px 12px #d24be466;
+}
+
+.goals-empty {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255,255,255,0.85);
+  border-radius: 24px;
+  box-shadow: 0 8px 40px #05ce7833;
+  color: #b8c1ec;
+  font-size: 1.1em;
+}
+
+.goals-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  justify-content: center;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.goal-card {
+  padding: 2rem;
+  background: rgba(255,255,255,0.85);
+  border-radius: 24px;
+  box-shadow: 0 8px 40px #05ce7833, 0 1.5px 0 #c110d1;
+  backdrop-filter: blur(8px);
+  color: #232946;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.goal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.goal-title {
+  font-size: 1.6rem;
+  color: #c110d1;
+  margin-bottom: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 12px #d24be466;
+}
+
+.goal-description {
+  font-size: 1.13rem;
+  color: #232946;
+  margin-bottom: 2rem;
+  line-height: 1.7;
+  background: rgba(255,255,255,0.45);
+  border-radius: 12px;
+  padding: 1.1em 1.2em;
+  box-shadow: 0 1.5px 8px #b8c1ec22;
+}
+
+.goal-progress {
+  margin: 1.5rem 0;
+}
+
+.goal-progress-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(184, 193, 236, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.goal-progress-fill {
+  height: 100%;
+  transition: width 0.6s ease-out, background 0.3s ease;
+  box-shadow: 0 0 10px rgba(5, 206, 120, 0.3);
+  animation: pulse 2s infinite;
+}
+
+.goal-progress-numbers {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  color: #b8c1ec;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 10px rgba(5, 206, 120, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(5, 206, 120, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(5, 206, 120, 0.3);
+  }
+}
+
+.goal-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(90deg, #b8c1ec22 0%, #05ce7811 100%);
+  border-radius: 18px;
+  box-shadow: 0 2px 12px #05ce7833;
+}
+
+.goal-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.goal-stat-label {
+  font-size: 0.97rem;
+  color: #b8c1ec;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.goal-stat-value {
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: #c110d1;
+  text-shadow: 0 1px 8px #d24be433;
+}

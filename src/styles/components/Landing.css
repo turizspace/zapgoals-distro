@@ -1,0 +1,38 @@
+.landing-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(120deg, #232946 0%, #b8c1ec 100%);
+}
+.landing-page h1 {
+  color: #05ce78;
+  font-size: 2.8em;
+  margin-bottom: 8px;
+}
+.landing-page h2 {
+  color: #eebbc3;
+  font-weight: 400;
+  margin-bottom: 24px;
+}
+.landing-page p {
+  color: #b8c1ec;
+  max-width: 400px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+.landing-page .primary-action {
+  background: #05ce78;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 12px;
+  padding: 0.9em 2.5em;
+  cursor: pointer;
+  box-shadow: 0 4px 24px #05ce7833;
+}
+.landing-page .primary-action:hover {
+  background: #1baf5d;
+}

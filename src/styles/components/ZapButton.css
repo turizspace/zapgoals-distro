@@ -1,0 +1,97 @@
+.zap-action {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  background: var(--hover-background);
+}
+
+.zap-action input {
+  background: var(--background-dark);
+  border: 1px solid var(--accent-color);
+  color: var(--text-primary);
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  width: 80px;
+  transition: opacity 0.2s;
+}
+
+.zap-action input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.zap-button {
+  background: var(--accent-color);
+  color: var(--background-dark);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.zap-button:hover:not(:disabled) {
+  background: var(--accent-color-dark);
+  transform: translateY(-1px);
+}
+
+.zap-button:disabled {
+  background: var(--background-light);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.zap-button.loading {
+  background: var(--accent-color);
+  opacity: 0.8;
+  cursor: wait;
+}
+
+.zap-button.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.status-message {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  animation: fadeIn 0.3s ease;
+}
+
+.status-message:empty {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

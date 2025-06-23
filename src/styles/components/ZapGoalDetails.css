@@ -1,0 +1,154 @@
+.zap-goal-details {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.85);
+  border-radius: 24px;
+  box-shadow: 0 8px 40px #05ce7833, 0 1.5px 0 #c110d1;
+  backdrop-filter: blur(8px);
+  color: #232946;
+}
+
+.zap-goal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.zap-goal-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2.5px solid #05ce78;
+  background: #fff;
+  object-fit: cover;
+}
+
+.zap-goal-author {
+  display: flex;
+  flex-direction: column;
+}
+
+.zap-goal-author-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #05ce78;
+}
+
+.zap-goal-title {
+  font-size: 2.1rem;
+  color: #c110d1;
+  margin-bottom: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 12px #d24be466;
+}
+
+.zap-goal-summary {
+  font-size: 1.13rem;
+  color: #232946;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(90deg, #eebbc3 0%, #b8c1ec 100%);
+  border-radius: 16px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px #b8c1ec33;
+}
+
+.zap-goal-image {
+  display: block;
+  max-width: 100%;
+  border-radius: 18px;
+  margin: 1.2em auto 1.2em auto;
+  box-shadow: 0 4px 24px #05ce7833;
+}
+
+.zap-goal-description {
+  font-size: 1.13rem;
+  color: #232946;
+  margin-bottom: 2rem;
+  line-height: 1.7;
+  background: rgba(255,255,255,0.45);
+  border-radius: 12px;
+  padding: 1.1em 1.2em;
+  box-shadow: 0 1.5px 8px #b8c1ec22;
+}
+
+.zap-goal-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: linear-gradient(90deg, #b8c1ec22 0%, #05ce7811 100%);
+  border-radius: 18px;
+  box-shadow: 0 2px 12px #05ce7833;
+}
+
+.zap-goal-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.zap-goal-stat-label {
+  font-size: 0.97rem;
+  color: #b8c1ec;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.zap-goal-stat-value {
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: #c110d1;
+  text-shadow: 0 1px 8px #d24be433;
+}
+
+.zap-goal-replies {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1.5px solid #05ce78;
+  background: rgba(255,255,255,0.55);
+  border-radius: 0 0 18px 18px;
+}
+
+.notif-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.notif-feed-item {
+  padding: 1rem;
+  background: linear-gradient(90deg, #eebbc3 0%, #b8c1ec 100%);
+  border-radius: 14px;
+  box-shadow: 0 1.5px 8px #b8c1ec22;
+}
+
+.notif-feed-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #232946;
+}
+
+@media (max-width: 600px) {
+  .zap-goal-details {
+    padding: 0.7rem;
+    max-width: 98vw;
+  }
+  .zap-goal-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+  }
+  .zap-goal-title {
+    font-size: 1.3rem;
+  }
+  .zap-goal-summary, .zap-goal-description, .zap-goal-stats, .zap-goal-replies {
+    padding: 0.7em;
+  }
+}
