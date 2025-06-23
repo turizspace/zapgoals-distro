@@ -33,9 +33,9 @@ export function useNostrLogin(version?: number): {
     async function login() {
       let pk: string | null = null;
 
-      // Only support nip07 login method if explicitly set
+      // Only support nip07 login method
       const storedMethod = localStorage.getItem('nostr_login_method');
-      if (storedMethod === 'nip07') {
+      if (storedMethod === 'nip07' || currentLoginMethod === 'nip07') {
         let provider = getNip07Provider();
         if (!provider && typeof window !== 'undefined') {
           await new Promise(resolve => {
@@ -111,13 +111,9 @@ export function useNostrLogin(version?: number): {
   return { pubkey, npub, profile };
 }
 
-export function setLoginMethod(method: 'nip07' | null): void {
+export function setLoginMethod(method: 'nip07'): void {
   currentLoginMethod = method;
-  if (method) {
-    localStorage.setItem('nostr_login_method', method);
-  } else {
-    localStorage.removeItem('nostr_login_method');
-  }
+  localStorage.setItem('nostr_login_method', method);
 }
 
 export async function nostrSign(event: any): Promise<any> {

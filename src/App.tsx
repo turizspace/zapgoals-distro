@@ -90,7 +90,7 @@ function App() {
     setSelectedProfile(null);
     setSelectedGoal(null);
     setView('landing');
-    setLoginMethod(null); // Clear login method
+    setLoginMethod('nip07'); // Reset login method to nip07
     setLoginVersion(v => v + 1); // force useNostrLogin to re-run
   };
 
