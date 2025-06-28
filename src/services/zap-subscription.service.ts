@@ -1,4 +1,3 @@
-import type { ZapSubscription } from '../utils/storage-utils';
 import { NostrService } from './nostr.service';
 import { loadZapSubscriptions, saveZapSubscriptions, loadNwc } from '../utils/storage-utils';
 
