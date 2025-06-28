@@ -178,9 +178,19 @@ export const ZapGoalDetails: React.FC<ZapGoalDetailsProps> = ({ goalId, relays, 
   if (!goal) return <div className="empty-theme">Zap Goal not found.</div>;
 
   let content: any = {};
+  let goalAmount = 0;
   try {
     content = JSON.parse(goal.content);
   } catch {}
+  // Consistent goal amount parsing
+  const amountTag = goal.tags.find(t => t[0] === 'amount');
+  goalAmount = (amountTag && parseInt(amountTag[1], 10)) || content.goal || content.target || 0;
+
+  // Convert msats to sats for display
+  const totalZappedSats = Math.floor(zapStats.total / 1000);
+  // Use msats for calculation, sats for display
+  const balanceLeftSats = Math.max(0, goalAmount - totalZappedSats);
+  const progressPercent = goalAmount > 0 ? Math.min(100, ((totalZappedSats / goalAmount) * 100)).toFixed(3) : '0.000';
 
   const authorDisplay = authorProfile?.display_name || authorProfile?.name || goal.pubkey.slice(0, 8);
 
@@ -214,21 +224,19 @@ export const ZapGoalDetails: React.FC<ZapGoalDetailsProps> = ({ goalId, relays, 
         <div className="zap-goal-stats">
           <div className="zap-goal-stat">
             <div className="zap-goal-stat-label">Goal</div>
-            <div className="zap-goal-stat-value">
-              {(goal.tags?.find(t => t[0] === 'amount')?.[1] || content.goal || content.target || 0) + ' sats'}
-            </div>
+            <div className="zap-goal-stat-value">{goalAmount} sats</div>
           </div>
           <div className="zap-goal-stat">
             <div className="zap-goal-stat-label">Total Zapped</div>
-            <div className="zap-goal-stat-value">{zapStats.total / 1000} sats</div>
+            <div className="zap-goal-stat-value">{totalZappedSats} sats</div>
           </div>
           <div className="zap-goal-stat">
             <div className="zap-goal-stat-label">Progress</div>
-            <div className="zap-goal-stat-value">{zapStats.percent}%</div>
+            <div className="zap-goal-stat-value">{progressPercent}%</div>
           </div>
           <div className="zap-goal-stat">
             <div className="zap-goal-stat-label">Balance Left</div>
-            <div className="zap-goal-stat-value">{zapStats.balance} sats</div>
+            <div className="zap-goal-stat-value">{balanceLeftSats} sats</div>
           </div>
         </div>
 
