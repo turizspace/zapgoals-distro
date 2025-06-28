@@ -132,7 +132,7 @@ export function saveZapSubscriptions(subs: ZapSubscription[]): void {
   try {
     localStorage.setItem(STORAGE_KEYS.ZAP_SUBSCRIPTIONS, JSON.stringify(subs));
   } catch (error) {
-    console.error('Failed to save zap subscriptions:', error);
+    console.error('Failed to save subscriptions:', error);
   }
 }
 
@@ -141,7 +141,7 @@ export function loadZapSubscriptions(): ZapSubscription[] {
     const stored = localStorage.getItem(STORAGE_KEYS.ZAP_SUBSCRIPTIONS);
     return stored ? JSON.parse(stored) : [];
   } catch (error) {
-    console.error('Failed to load zap subscriptions:', error);
+    console.error('Failed to load subscriptions:', error);
     return [];
   }
 }

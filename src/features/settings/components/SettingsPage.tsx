@@ -254,9 +254,9 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ relays, setRelays, k
       try {
         await nostr.publishEvent(signedEvent);
         // Optionally: show a toast/alert
-        alert('Zap subscription event published!');
+        alert('Ssubscription event published!');
       } catch {
-        alert('Failed to publish zap subscription event.');
+        alert('Failed to publish subscription event.');
       }
     }
   }
@@ -313,7 +313,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ relays, setRelays, k
           className={`settings-tab ${tab === 'subscriptions' ? 'active' : ''}`}
           onClick={() => setTab('subscriptions')}
         >
-          Zap Subscriptions
+          Subscriptions
         </button>
       </div>
       <div className="settings-content">
@@ -449,7 +449,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ relays, setRelays, k
         {tab === 'subscriptions' && (
           <div>
             <div className="subscriptions-header">
-              <h3>Zap Subscriptions</h3>
+              <h3>Subscriptions</h3>
               <button onClick={() => setShowAddSub(!showAddSub)} className="save-button">
                 {showAddSub ? 'Cancel' : 'Add Subscription'}
               </button>

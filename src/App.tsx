@@ -151,7 +151,7 @@ function App() {
     // saveNwc is already called by the effect above
   };
 
-  // Start/stop zap subscription service when nostrService, nwc, or login state changes
+  // Start/stop subscription service when nostrService, nwc, or login state changes
   useEffect(() => {
     if (pubkey && nostrService && nwc) {
       if (!zapSubService) {
@@ -169,11 +169,11 @@ function App() {
     // eslint-disable-next-line
   }, [pubkey, nostrService, nwc]);
 
-  // Listen for insufficient balance events from zap subscription service
+  // Listen for insufficient balance events from subscription service
   useEffect(() => {
     function handleInsufficientBalance(e: any) {
       const { sub, balance } = e.detail || {};
-      alert(`⚠️ Zap subscription for goal "${sub.goalName || sub.goalId}" could not be sent: Insufficient NWC balance (${balance} sats). Please top up your wallet.`);
+      alert(`⚠️ subscription for goal "${sub.goalName || sub.goalId}" could not be sent: Insufficient NWC balance (${balance} sats). Please top up your wallet.`);
     }
     window.addEventListener('zap-subscription-insufficient-balance', handleInsufficientBalance);
     return () => window.removeEventListener('zap-subscription-insufficient-balance', handleInsufficientBalance);

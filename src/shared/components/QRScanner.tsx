@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import jsQR from 'jsqr';
 
 interface QRScannerProps {
@@ -6,12 +6,13 @@ interface QRScannerProps {
   onError?: (err: any) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const QRScanner: React.FC<QRScannerProps> = ({ onScan, onError }) => {
+  const [open, setOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
+    if (!open) return;
     let active = true;
     let scanInterval: any = null;
     const constraints = { video: { facingMode: 'environment' } };
@@ -38,6 +39,7 @@ export const QRScanner: React.FC<QRScannerProps> = ({ onScan, onError }) => {
               const code = jsQR(imageData.data, canvas.width, canvas.height);
               if (code && code.data) {
                 if (onScan) onScan(code.data);
+                setOpen(false);
                 clearInterval(scanInterval);
               }
             }
@@ -54,14 +56,22 @@ export const QRScanner: React.FC<QRScannerProps> = ({ onScan, onError }) => {
       }
       if (scanInterval) clearInterval(scanInterval);
     };
-  }, [onError, onScan]);
+  }, [onError, onScan, open]);
 
-  // For demo: just show the video, real scan logic can be added with jsQR or similar
   return (
-    <div style={{ width: '100%', maxWidth: 320 }}>
-      <video ref={videoRef} style={{ width: '100%' }} />
-      {/* Add scan logic or library integration here */}
-      <div style={{ color: 'gray', fontSize: 12 }}>QR scanning coming soon...</div>
-    </div>
+    <>
+      <button type="button" onClick={() => setOpen(true)} style={{ padding: '0.5em 1.2em', borderRadius: 8, background: '#3182ce', color: 'white', border: 'none', fontWeight: 600, cursor: 'pointer' }}>
+        Scan QR
+      </button>
+      {open && (
+        <div style={{ position: 'fixed', zIndex: 1000, left: 0, top: 0, width: '100vw', height: '100vh', background: 'rgba(30,32,46,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: '#fff', borderRadius: 12, padding: 24, boxShadow: '0 4px 24px rgba(0,0,0,0.18)', maxWidth: 360, width: '90vw', position: 'relative' }}>
+            <button onClick={() => setOpen(false)} style={{ position: 'absolute', top: 8, right: 12, background: 'none', border: 'none', fontSize: 22, color: '#888', cursor: 'pointer' }} title="Close">×</button>
+            <video ref={videoRef} style={{ width: '100%', borderRadius: 8, background: '#222' }} />
+            <div style={{ color: '#666', fontSize: 13, marginTop: 8, textAlign: 'center' }}>Point your camera at a QR code</div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

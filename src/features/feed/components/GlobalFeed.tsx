@@ -168,10 +168,12 @@ export const GlobalFeed: React.FC<GlobalFeedProps> = ({ relays, onProfileClick, 
           const npubStr = npubEncode(ev.pubkey);
           let authorDisplay = authorProfile.display_name || authorProfile.name || npubStr.slice(0, 8) + '...' + npubStr.slice(-4);
 
+          // Convert received from msats to sats for all calculations
+          const receivedSats = received / 1000;
           // Calculate percent funded and balance left
-          const percent = goal ? Math.min(100, (received / goal) * 100) : 0;
+          const percent = goal ? Math.min(100, (receivedSats / goal) * 100) : 0;
           const percentDisplay = percent.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-          const balance = goal ? Math.max(0, goal - received) : 0;
+          const balance = goal ? Math.max(0, goal - receivedSats) : 0;
 
           return (
             <div key={ev.id} className="feed-goal-card" onClick={() => onGoalClick(ev.id)}>
@@ -206,7 +208,7 @@ export const GlobalFeed: React.FC<GlobalFeedProps> = ({ relays, onProfileClick, 
                 role="button"
                 title="View goal details">{summary}</p>
               )}
-              <ZapProgress goal={goal} received={received} />
+              <ZapProgress goal={goal} received={receivedSats} />
               <div className="feed-goal-stats">
                 <div className="feed-goal-stat">
                   <span>Total Zapped:</span>
