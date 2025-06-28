@@ -3,6 +3,7 @@ import { SimplePool, type Event as NostrEvent } from 'nostr-tools';
 import { npubEncode } from '../../../npub';
 import { ZapButton } from '../../../shared/components/ZapButton';
 import { ZapProgress } from '../../../shared/components/ZapProgress';
+import { GoalCard } from '../../../shared/components/GoalCard';
 import '../../../styles/components/GlobalFeed.css';
 
 interface GlobalFeedProps {
@@ -198,23 +199,14 @@ export const GlobalFeed: React.FC<GlobalFeedProps> = ({ relays, onProfileClick, 
                   </div>
                 </div>
               </div>
-              
-              {title && (
-                <p className="feed-goal-description"
-                onClick={() => onGoalClick(ev.id)}
-                role="button"
-                title="View goal details">{title}</p>
-              )}
-
+              <GoalCard eventId={ev.id} name={title} />
               {summary && (
                 <p className="feed-goal-description"
                 onClick={() => onGoalClick(ev.id)}
                 role="button"
                 title="View goal details">{summary}</p>
               )}
-              
               <ZapProgress goal={goal} received={received} />
-              
               <div className="feed-goal-stats">
                 <div className="feed-goal-stat">
                   <span>Total Zapped:</span>
@@ -229,7 +221,6 @@ export const GlobalFeed: React.FC<GlobalFeedProps> = ({ relays, onProfileClick, 
                   <b>{balance} sats</b>
                 </div>
               </div>
-              
               <div className="zap-button-wrapper" onClick={e => e.stopPropagation()}>
                 <ZapButton event={ev} nwc={nwc} />
               </div>

@@ -314,6 +314,98 @@
   font-family: monospace;
 }
 
+.subscriptions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.add-subscription-form {
+  background: var(--background);
+  border-radius: var(--radius);
+  padding: 1.5rem 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(49, 130, 206, 0.07);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+.add-subscription-form input,
+.add-subscription-form select {
+  flex: 1 1 180px;
+  min-width: 160px;
+}
+
+.subscriptions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.subscription-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border-radius: var(--radius);
+  border: 1px solid #e2e8f0;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 1px 2px rgba(49, 130, 206, 0.05);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.subscription-item:hover {
+  border-color: #3182ce;
+  box-shadow: 0 2px 8px rgba(49, 130, 206, 0.12);
+}
+.subscription-item strong {
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+.subscription-item .paused-label {
+  color: #ef4444;
+  font-size: 0.95em;
+  margin-left: 0.5em;
+}
+.subscription-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mini-zap-goal-card {
+  background: #f1f5f9;
+  border-radius: 8px;
+  padding: 1rem 1.2rem 0.7rem 1.2rem;
+  margin-bottom: 0.3rem;
+  box-shadow: 0 1px 2px rgba(49,130,206,0.07);
+  font-size: 1rem;
+}
+.mini-zap-goal-title {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 1.08em;
+  margin-bottom: 0.2em;
+}
+.mini-zap-goal-meta {
+  color: #666;
+  font-size: 0.97em;
+  margin-bottom: 0.2em;
+}
+.mini-zap-goal-summary {
+  color: #444;
+  font-size: 0.98em;
+  margin-bottom: 0.1em;
+}
+.mini-zap-goal-card.loading,
+.mini-zap-goal-card.empty {
+  color: #aaa;
+  font-style: italic;
+  padding: 0.7em 1em;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

@@ -11,6 +11,8 @@ import { CreateZapGoal, ZapGoalDetails } from './features/goals';
 import { SettingsPage } from './features/settings';
 import { ZapNotificationsPage } from './features/notifications';
 import { useNostrData } from './hooks/useNostr';
+import { Leaderboard } from './shared/components/Leaderboard';
+import { ZapSubscriptionService } from './services/zap-subscription.service';
 
 function App() {
   const [loginVersion, setLoginVersion] = useState(0);
@@ -43,6 +45,9 @@ function App() {
   const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
 
   const nostrService = useNostrData(relays);
+
+  // ZapSubscriptionService instance
+  const [zapSubService, setZapSubService] = useState<ZapSubscriptionService | null>(null);
 
   // Add relay health check effect
   useEffect(() => {
@@ -146,6 +151,34 @@ function App() {
     // saveNwc is already called by the effect above
   };
 
+  // Start/stop zap subscription service when nostrService, nwc, or login state changes
+  useEffect(() => {
+    if (pubkey && nostrService && nwc) {
+      if (!zapSubService) {
+        const service = new ZapSubscriptionService(nostrService);
+        service.start();
+        setZapSubService(service);
+      } else {
+        zapSubService.start();
+      }
+    } else if (zapSubService) {
+      zapSubService.stop();
+    }
+    // Clean up on unmount
+    return () => { zapSubService?.stop(); };
+    // eslint-disable-next-line
+  }, [pubkey, nostrService, nwc]);
+
+  // Listen for insufficient balance events from zap subscription service
+  useEffect(() => {
+    function handleInsufficientBalance(e: any) {
+      const { sub, balance } = e.detail || {};
+      alert(`⚠️ Zap subscription for goal "${sub.goalName || sub.goalId}" could not be sent: Insufficient NWC balance (${balance} sats). Please top up your wallet.`);
+    }
+    window.addEventListener('zap-subscription-insufficient-balance', handleInsufficientBalance);
+    return () => window.removeEventListener('zap-subscription-insufficient-balance', handleInsufficientBalance);
+  }, []);
+
   if (!pubkey) {
     if (view !== 'landing') setView('landing');
     return (
@@ -234,6 +267,9 @@ function App() {
               profile={profile ? { ...profile, npub: npub ?? undefined } : undefined}
 
             />
+          )}
+          {view === 'leaderboard' && (
+            <Leaderboard relays={relays} />
           )}
         </main>
       </div>

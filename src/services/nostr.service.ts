@@ -354,4 +354,40 @@ export class NostrService {
   public getRelayHealth(): Record<string, { successRate: number; avgLatency: number }> {
     return this.healthMonitor.getRelayMetrics();
   }
+
+  async fetchEventById(eventId: string): Promise<Event | null> {
+    for (const relay of this.relays) {
+      try {
+        const event = await this.pool.get([relay], { ids: [eventId] });
+        if (event) return event;
+      } catch (e) {
+        // Ignore relay errors, try next
+      }
+    }
+    return null;
+  }
+
+  async getNwcBalance(nwcUri?: string): Promise<number | null> {
+    try {
+      const { NWCClient } = await import('./nwc.service');
+      const nwc = nwcUri || (typeof window !== 'undefined' ? localStorage.getItem('zap-goals-nwc') : null);
+      if (!nwc) return null;
+      const client = new NWCClient({ nostrWalletConnectUrl: nwc });
+      const { balance } = await client.getBalance();
+      client.close();
+      return balance;
+    } catch {
+      return null;
+    }
+  }
+
+  async publishEvent(event: Event): Promise<void> {
+    for (const relay of this.healthyRelays) {
+      try {
+        await this.pool.publish([relay], event);
+      } catch (e) {
+        // Optionally: log relay error
+      }
+    }
+  }
 }

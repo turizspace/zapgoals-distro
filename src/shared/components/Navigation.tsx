@@ -174,6 +174,7 @@ export const Navigation: React.FC<NavigationProps> = ({ current, onNavigate, pro
     </button>
   ) : null;
 
+
   // Navigation content (sidebar or drawer)
   const navContent = (
     <aside
@@ -270,7 +271,9 @@ export const Navigation: React.FC<NavigationProps> = ({ current, onNavigate, pro
         <nav className="navigation-bar" style={{ width: '100%', marginBottom: 0, gap: '0.7em', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <button className={current === 'feed' ? 'active' : ''} onClick={() => handleNav('feed')}>Feed</button>
           <button className={current === 'settings' ? 'active' : ''} onClick={() => handleNav('settings')}>Settings</button>
-          
+          <button className={current === 'leaderboard' ? 'active' : ''} onClick={() => handleNav('leaderboard')}>
+            Leaderboard
+          </button>
         </nav>
         <div className="nav-notifications" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
           <button className="notification-bell" title="Zap Notifications" style={{ background: 'none', border: 'none', position: 'relative', cursor: 'pointer' }} onClick={onShowNotifications}>

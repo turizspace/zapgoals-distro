@@ -1,5 +1,5 @@
 /** Navigation view types for the application */
-export type View = 'landing' | 'feed' | 'profile' | 'create' | 'settings' | 'notifications' | 'goal';
+export type View = 'landing' | 'feed' | 'profile' | 'create' | 'settings' | 'notifications' | 'goal' | 'leaderboard';
 
 // Import shared NostrProfile type
 import type { NostrProfile } from './index';

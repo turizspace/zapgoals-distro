@@ -3,8 +3,11 @@ import { nip19, utils, getPublicKey } from 'nostr-tools';
 import { NWCClient } from '../../../services/nwc.service';
 import { getNip07Provider } from '../../../nostr/getNip07Provider';
 import { useNostrData } from '../../../hooks/useNostr';
-import { saveRelays } from '../../../utils/storage-utils';
+import { saveRelays, loadZapSubscriptions, saveZapSubscriptions } from '../../../utils/storage-utils';
+import type { ZapSubscription } from '../../../utils/storage-utils';
 import '../../../styles/components/SettingsPage.css';
+import { QRScanner } from '../../../shared/components/QRScanner';
+import { MiniZapGoalCard } from '../../goals/components/MiniZapGoalCard';
 
 function generateRandomBytes(): Uint8Array {
   const array = new Uint8Array(32);
@@ -29,7 +32,7 @@ interface SettingsPageProps {
 }
 
 export const SettingsPage: React.FC<SettingsPageProps> = ({ relays, setRelays, keys, setKeys, nwc, setNwc }) => {
-  const [tab, setTab] = useState<'relays' | 'keys' | 'nwc'>('relays');
+  const [tab, setTab] = useState<'relays' | 'keys' | 'nwc' | 'subscriptions'>('relays');
   const [newRelay, setNewRelay] = useState('');
   const [relayError, setRelayError] = useState('');
   const [pubkey, setPubkey] = useState('');
@@ -42,6 +45,9 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ relays, setRelays, k
   const [nwcError, setNwcError] = useState<string | null>(null);
   const [checkingBalance, setCheckingBalance] = useState(false);
   const [nwcConnected, setNwcConnected] = useState(false);
+  const [zapSubscriptions, setZapSubscriptions] = useState<ZapSubscription[]>([]);
+  const [showAddSub, setShowAddSub] = useState(false);
+  const [newSub, setNewSub] = useState<{ goalId: string; goalName: string; amount: number; frequency: string }>({ goalId: '', goalName: '', amount: 100, frequency: 'daily' });
   const nostr = useNostrData(relays);
 
   // Add relay health state
@@ -89,6 +95,13 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ relays, setRelays, k
 
     return () => clearInterval(interval);
   }, [nostr]);
+
+  useEffect(() => {
+    if (tab === 'subscriptions') {
+      const subs = loadZapSubscriptions();
+      setZapSubscriptions(subs);
+    }
+  }, [tab]);
 
   function handleAddRelay() {
     if (!newRelay) return;
@@ -191,6 +204,89 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ relays, setRelays, k
     checkNwcBalance();
   }
 
+  function decodeGoalId(input: string): string {
+    if (!input) return '';
+    if (/^[a-f0-9]{64}$/i.test(input)) return input; // already raw
+    try {
+      if (input.startsWith('note1')) {
+        return nip19.decode(input).data as string;
+      }
+      if (input.startsWith('nevent1')) {
+        const data = nip19.decode(input).data;
+        if (data && typeof data === 'object' && 'id' in data && typeof data.id === 'string') {
+          return data.id;
+        }
+      }
+    } catch {}
+    return input; // fallback
+  }
+
+  async function publishSubscriptionEvent(goalId: string, goalName: string) {
+    if (!pubkey || !nostr) return;
+    const tags = [
+      ['e', goalId],
+      ['client', 'zapgoals-distro'],
+      ['kind', 'zap-subscription'],
+      ['pubkey', pubkey],
+    ];
+    const content = `Subscribed to zap goal: ${goalName || goalId}`;
+    const event = {
+      kind: 1,
+      created_at: Math.floor(Date.now() / 1000),
+      content,
+      tags,
+      pubkey,
+    };
+    let signedEvent;
+    if (loginMethod === 'extension') {
+      const provider = getNip07Provider();
+      if (!provider) return;
+      signedEvent = await provider.signEvent(event);
+    } else if (privkey) {
+      signedEvent = { ...event, id: '', sig: '' };
+      try {
+        const { finalizeEvent, utils } = await import('nostr-tools');
+        const privkeyBytes = utils.hexToBytes(privkey);
+        signedEvent = finalizeEvent(event, privkeyBytes);
+      } catch {}
+    }
+    if (signedEvent) {
+      try {
+        await nostr.publishEvent(signedEvent);
+        // Optionally: show a toast/alert
+        alert('Zap subscription event published!');
+      } catch {
+        alert('Failed to publish zap subscription event.');
+      }
+    }
+  }
+
+  function handleAddSubscription() {
+    const rawGoalId = decodeGoalId(newSub.goalId);
+    if (!rawGoalId || !newSub.amount || !newSub.frequency) return;
+    const id = Date.now().toString();
+    const nextZap = Date.now();
+    const sub = { ...newSub, goalId: rawGoalId, id, nextZap };
+    const updated = [...zapSubscriptions, sub];
+    saveZapSubscriptions(updated);
+    setZapSubscriptions(updated);
+    setShowAddSub(false);
+    setNewSub({ goalId: '', goalName: '', amount: 100, frequency: 'daily' });
+    publishSubscriptionEvent(rawGoalId, newSub.goalName);
+  }
+
+  function handleDeleteSubscription(id: string) {
+    const updated = zapSubscriptions.filter(s => s.id !== id);
+    saveZapSubscriptions(updated);
+    setZapSubscriptions(updated);
+  }
+
+  function handlePauseSubscription(id: string, paused: boolean) {
+    const updated = zapSubscriptions.map(s => s.id === id ? { ...s, paused } : s);
+    saveZapSubscriptions(updated);
+    setZapSubscriptions(updated);
+  }
+
   return (
     <div className="settings-page">
       <h2 className="settings-title">Settings</h2>
@@ -212,6 +308,12 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ relays, setRelays, k
           onClick={() => setTab('nwc')}
         >
           NWC
+        </button>
+        <button 
+          className={`settings-tab ${tab === 'subscriptions' ? 'active' : ''}`}
+          onClick={() => setTab('subscriptions')}
+        >
+          Zap Subscriptions
         </button>
       </div>
       <div className="settings-content">
@@ -299,6 +401,9 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ relays, setRelays, k
                 placeholder="Enter NWC URI (nostr+walletconnect://...)" 
                 className="form-input"
               />
+              <div style={{ marginTop: 8 }}>
+                <QRScanner onScan={val => setNwcInput(val)} />
+              </div>
             </div>
             <div className="form-actions">
               <button 
@@ -339,6 +444,73 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ relays, setRelays, k
               </div>
             )}
             {nwcError && <div className="error-message">{nwcError}</div>}
+          </div>
+        )}
+        {tab === 'subscriptions' && (
+          <div>
+            <div className="subscriptions-header">
+              <h3>Zap Subscriptions</h3>
+              <button onClick={() => setShowAddSub(!showAddSub)} className="save-button">
+                {showAddSub ? 'Cancel' : 'Add Subscription'}
+              </button>
+            </div>
+            {showAddSub && (
+              <div className="add-subscription-form">
+                <input
+                  type="text"
+                  placeholder="Goal noteId/nevent"
+                  value={newSub.goalId}
+                  onChange={e => setNewSub({ ...newSub, goalId: e.target.value })}
+                  className="form-input"
+                  style={{ minWidth: 180 }}
+                />
+                <input
+                  type="text"
+                  placeholder="Goal name (optional)"
+                  value={newSub.goalName}
+                  onChange={e => setNewSub({ ...newSub, goalName: e.target.value })}
+                  className="form-input"
+                  style={{ minWidth: 180 }}
+                />
+                <input
+                  type="number"
+                  placeholder="Amount (sats)"
+                  value={newSub.amount}
+                  min={1}
+                  onChange={e => setNewSub({ ...newSub, amount: Number(e.target.value) })}
+                  className="form-input"
+                  style={{ minWidth: 120 }}
+                />
+                <select
+                  value={newSub.frequency}
+                  onChange={e => setNewSub({ ...newSub, frequency: e.target.value })}
+                  className="form-input"
+                  style={{ minWidth: 120 }}
+                >
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+                <button onClick={handleAddSubscription} className="save-button">Save Subscription</button>
+              </div>
+            )}
+            <div className="subscriptions-list">
+              {zapSubscriptions.length === 0 && <div style={{ color: '#888', padding: '1.5rem 0', textAlign: 'center' }}>No subscriptions yet.</div>}
+              {zapSubscriptions.map(sub => (
+                <div key={sub.id} className="subscription-item">
+                  <div style={{ flex: 1 }}>
+                    <MiniZapGoalCard goalId={sub.goalId} relays={relays} />
+                    <div style={{ color: '#3182ce', fontWeight: 500, marginTop: 4 }}>{sub.amount} sats <span style={{ color: '#666', marginLeft: 8 }}>{sub.frequency}</span>{sub.paused && <span className="paused-label">(Paused)</span>}</div>
+                  </div>
+                  <div className="subscription-actions">
+                    <button onClick={() => handlePauseSubscription(sub.id, !sub.paused)} className="save-button">
+                      {sub.paused ? 'Resume' : 'Pause'}
+                    </button>
+                    <button onClick={() => handleDeleteSubscription(sub.id)} className="relay-remove">Delete</button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
