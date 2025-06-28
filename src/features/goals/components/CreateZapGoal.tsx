@@ -35,7 +35,7 @@ export const CreateZapGoal: React.FC<CreateZapGoalProps> = ({ onBack }) => {
     try {
       const tags: string[][] = [
         ['relays', ...appRelays],
-        ['goal', goal.toString()],
+        ['amount', goal.toString()],
         ['summary', summary],
       ];
       if (image) tags.push(['image', image]);

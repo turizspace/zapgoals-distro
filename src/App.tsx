@@ -2,7 +2,7 @@ import { useNostrLogin, setLoginMethod } from './nostr';
 import { useState, useEffect, useMemo } from 'react';
 import type { View } from './types/navigation';
 import { DEFAULT_RELAYS } from './constants';
-import { loadRelays, saveRelays } from './utils/storage-utils';
+import { loadRelays, saveRelays, loadNwc, saveNwc } from './utils/storage-utils';
 import { Navigation } from './shared/components/Navigation';
 import { Landing } from './features/landing';
 import { GlobalFeed } from './features/feed';
@@ -39,7 +39,7 @@ function App() {
     return savedRelays
   });
   const [keys, setKeys] = useState<{ pubkey: string; privkey: string } | null>(null);
-  const [nwc, setNwc] = useState<string>('');
+  const [nwc, setNwcState] = useState<string>(() => loadNwc() || '');
   const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
 
   const nostrService = useNostrData(relays);
@@ -134,6 +134,17 @@ function App() {
       setView('feed');
     }
   }, [pubkey, view]);
+
+  // Persist NWC to localStorage whenever it changes
+  useEffect(() => {
+    saveNwc(nwc);
+  }, [nwc]);
+
+  // Wrap setNwc to ensure all consumers use the persistent setter
+  const setNwc = (value: string) => {
+    setNwcState(value);
+    // saveNwc is already called by the effect above
+  };
 
   if (!pubkey) {
     if (view !== 'landing') setView('landing');
