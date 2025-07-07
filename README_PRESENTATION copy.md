@@ -65,4 +65,3 @@ No custodians, no risk of frozen funds, and no barriers to entry.
 ZapGoals is a step forward for decentralized crowdfunding.
 By leveraging Nostr and NWC, we make funding open, transparent, and user-controlled.
 Thank you for your attention—happy to answer any questions!
-Let me know if you want a printable version, speaker notes, or slides based on this outline!
